@@ -1291,13 +1291,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_28
+      name: Viking(Ice Axe)death1
       rect:
         serializedVersion: 2
-        x: 41
-        y: 1608
-        width: 33
-        height: 45
+        x: 42
+        y: 1609
+        width: 31
+        height: 43
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1313,13 +1313,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_29
+      name: Viking(Ice Axe)death2
       rect:
         serializedVersion: 2
-        x: 154
-        y: 1608
-        width: 35
-        height: 46
+        x: 155
+        y: 1609
+        width: 33
+        height: 44
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1335,10 +1335,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_30
+      name: Viking(Ice Axe)death3
       rect:
         serializedVersion: 2
-        x: 268
+        x: 269
         y: 1609
         width: 33
         height: 45
@@ -1357,13 +1357,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_31
+      name: Viking(Ice Axe)death4
       rect:
         serializedVersion: 2
-        x: 380
-        y: 1608
-        width: 38
-        height: 47
+        x: 381
+        y: 1609
+        width: 36
+        height: 45
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1379,13 +1379,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_32
+      name: Viking(Ice Axe)death5
       rect:
         serializedVersion: 2
-        x: 497
-        y: 1608
-        width: 37
-        height: 46
+        x: 498
+        y: 1609
+        width: 35
+        height: 44
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1401,13 +1401,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_33
+      name: Viking(Ice Axe)death6
       rect:
         serializedVersion: 2
-        x: 612
-        y: 1608
-        width: 40
-        height: 44
+        x: 613
+        y: 1609
+        width: 38
+        height: 42
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1423,13 +1423,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_34
+      name: Viking(Ice Axe)death7
       rect:
         serializedVersion: 2
-        x: 727
-        y: 1608
-        width: 43
-        height: 33
+        x: 728
+        y: 1609
+        width: 41
+        height: 31
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1445,13 +1445,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_35
+      name: Viking(Ice Axe)death8
       rect:
         serializedVersion: 2
-        x: 842
-        y: 1608
-        width: 42
-        height: 31
+        x: 843
+        y: 1609
+        width: 40
+        height: 29
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1467,13 +1467,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_36
+      name: Viking(Ice Axe)death9
       rect:
         serializedVersion: 2
-        x: 957
-        y: 1608
-        width: 46
-        height: 26
+        x: 958
+        y: 1609
+        width: 44
+        height: 24
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1489,13 +1489,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_37
+      name: Viking(Ice Axe)death10
       rect:
         serializedVersion: 2
-        x: 1072
-        y: 1608
-        width: 55
-        height: 16
+        x: 1073
+        y: 1609
+        width: 53
+        height: 14
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1511,13 +1511,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_38
+      name: Viking(Ice Axe)death11
       rect:
         serializedVersion: 2
-        x: 1187
-        y: 1608
-        width: 55
-        height: 14
+        x: 1188
+        y: 1609
+        width: 53
+        height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1533,13 +1533,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_39
+      name: Viking(Ice Axe)death12
       rect:
         serializedVersion: 2
-        x: 1302
-        y: 1608
-        width: 55
-        height: 11
+        x: 1303
+        y: 1609
+        width: 53
+        height: 9
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1577,13 +1577,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_41
+      name: Viking(Ice Axe)hit1
       rect:
         serializedVersion: 2
-        x: 38
-        y: 1444
-        width: 38
-        height: 41
+        x: 39
+        y: 1445
+        width: 36
+        height: 39
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1599,13 +1599,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_42
+      name: Viking(Ice Axe)hit2
       rect:
         serializedVersion: 2
-        x: 152
-        y: 1445
-        width: 38
-        height: 40
+        x: 153
+        y: 1446
+        width: 36
+        height: 38
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1621,13 +1621,13 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Viking(Ice Axe)-Sheet_43
+      name: Viking(Ice Axe)hit3
       rect:
         serializedVersion: 2
-        x: 270
-        y: 1443
-        width: 36
-        height: 43
+        x: 271
+        y: 1444
+        width: 34
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -4830,22 +4830,7 @@ TextureImporter:
       Viking(Ice Axe)-Sheet_25: 3396353901658064741
       Viking(Ice Axe)-Sheet_26: -8098747629230947546
       Viking(Ice Axe)-Sheet_27: -1906140388977564241
-      Viking(Ice Axe)-Sheet_28: -3935095744498198328
-      Viking(Ice Axe)-Sheet_29: -1122019556942740658
-      Viking(Ice Axe)-Sheet_30: -759111466769319500
-      Viking(Ice Axe)-Sheet_31: 5302601460763526312
-      Viking(Ice Axe)-Sheet_32: 351803377477445676
-      Viking(Ice Axe)-Sheet_33: -6321510019563718000
-      Viking(Ice Axe)-Sheet_34: -1904984237316474367
-      Viking(Ice Axe)-Sheet_35: -1131343620204510327
-      Viking(Ice Axe)-Sheet_36: 5557865930671601375
-      Viking(Ice Axe)-Sheet_37: -1093306679840853654
-      Viking(Ice Axe)-Sheet_38: -6895303097431428648
-      Viking(Ice Axe)-Sheet_39: 7169173691749763704
       Viking(Ice Axe)-Sheet_40: 3708772383185277257
-      Viking(Ice Axe)-Sheet_41: -2174943579062323379
-      Viking(Ice Axe)-Sheet_42: 8871923124315869662
-      Viking(Ice Axe)-Sheet_43: -1794115791636475248
       Viking(Ice Axe)-Sheet_44: 634957498300823851
       Viking(Ice Axe)-Sheet_45: 4298533773561404095
       Viking(Ice Axe)-Sheet_46: 3326284081759666828
@@ -4920,6 +4905,21 @@ TextureImporter:
       Viking(Ice Axe)Run6: 4040008693326049543
       Viking(Ice Axe)Run7: -2178578028542179303
       Viking(Ice Axe)Run8: -2918000817180529668
+      Viking(Ice Axe)death1: -3935095744498198328
+      Viking(Ice Axe)death10: -1093306679840853654
+      Viking(Ice Axe)death11: -6895303097431428648
+      Viking(Ice Axe)death12: 7169173691749763704
+      Viking(Ice Axe)death2: -1122019556942740658
+      Viking(Ice Axe)death3: -759111466769319500
+      Viking(Ice Axe)death4: 5302601460763526312
+      Viking(Ice Axe)death5: 351803377477445676
+      Viking(Ice Axe)death6: -6321510019563718000
+      Viking(Ice Axe)death7: -1904984237316474367
+      Viking(Ice Axe)death8: -1131343620204510327
+      Viking(Ice Axe)death9: 5557865930671601375
+      Viking(Ice Axe)hit1: -2174943579062323379
+      Viking(Ice Axe)hit2: 8871923124315869662
+      Viking(Ice Axe)hit3: -1794115791636475248
       a: -9221460410034977158
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
