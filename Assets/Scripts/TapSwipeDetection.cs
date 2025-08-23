@@ -11,6 +11,10 @@ public class TapSwipeDetection : MonoBehaviour
     public float tapTimeOut = 0.2f; // Maximum time to wait for a tap
     public float swipeTimeOut = 0.5f; // Maximum time to wait for a swipe
 
+    //tap mechanics
+    public float doubleTapTime = 0.2f; // maximum time between taps to consider a double tap
+    public float lastTapTime = 0f; // Time of last tap
+
     //variables to store the state of the tap/swipe
     private float StartTime;
     private float EndTime;
@@ -93,7 +97,16 @@ public class TapSwipeDetection : MonoBehaviour
 
     private void TapDetected()
     {
+        if (Time.time - lastTapTime <= doubleTapTime)
+        {
+            Debug.Log("Double Tap Detected at: " + startPosition);
+            lastTapTime = 0f; // Reset last tap time to avoid triple tap detection
+            return;
+        }
+
         Debug.Log("Tap Detected at: " + startPosition);
+
+        lastTapTime = Time.time;
     }
 
     // Update is called once per frame
