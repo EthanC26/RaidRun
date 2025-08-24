@@ -10,6 +10,7 @@ public class TileLevelGen : MonoBehaviour
     [Header("Tile Settings")]
     public Tile groundTile;
     public Tile obstacleTile;
+    public Tile DirtTile;
 
     private ObjectPool<Tile> GroundPool;
     private ObjectPool<Tile> ObstaclePool;
@@ -89,6 +90,9 @@ public class TileLevelGen : MonoBehaviour
     {
         Vector3Int tilePosition = new Vector3Int(rightmostTileColumnXPos, groundlevel, 0);
         tilemap.SetTile(tilePosition, tile);
+
+        Vector3Int titlePosition = new Vector3Int(rightmostTileColumnXPos, groundlevel - 1, 0);
+        tilemap.SetTile(titlePosition, DirtTile);
 
         // Randomly place obstacles
         if (Random.value < obstacleProbability)
