@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(InputManager))]
@@ -5,6 +6,17 @@ public class TapSwipeDetection : MonoBehaviour
 {
     private InputManager inputManager;
 
+    public event Action<Vector2> OnTap;
+    public event Action<Vector2> OnDoubleTap;
+    public event Action<SwipeDirection> OnSwipe;
+
+    public enum SwipeDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
     //veribales for tap and swipe detection
     public float distanceThreshold = 0.1f; // Distance in units to consider a tap
     public float directionThershold = 0.9f; // Distance in units to consider a swipe direction
@@ -72,22 +84,22 @@ public class TapSwipeDetection : MonoBehaviour
 
         if(checkUp >= directionThershold)
         {
-            Debug.Log("Swipe Up Detected");
+            OnSwipe?.Invoke(SwipeDirection.Up);
             return true;
         }
         if (checkUp <= -directionThershold)
         {
-            Debug.Log("Swipe Down Detected");
+            OnSwipe?.Invoke(SwipeDirection.Down);
             return true;
         }
         if (checkRight >= directionThershold)
         {
-            Debug.Log("Swipe Right Detected");
+            OnSwipe?.Invoke(SwipeDirection.Right);
             return true;
         }
         if (checkRight <= -directionThershold)
         {
-            Debug.Log("Swipe Left Detected");
+            OnSwipe?.Invoke(SwipeDirection.Left);
             return true;
         }
 
@@ -99,13 +111,12 @@ public class TapSwipeDetection : MonoBehaviour
     {
         if (Time.time - lastTapTime <= doubleTapTime)
         {
-            Debug.Log("Double Tap Detected at: " + startPosition);
+            OnDoubleTap?.Invoke(startPosition);
             lastTapTime = 0f; // Reset last tap time to avoid triple tap detection
             return;
         }
 
-        Debug.Log("Tap Detected at: " + startPosition);
-
+        OnTap?.Invoke(startPosition);
         lastTapTime = Time.time;
     }
 
