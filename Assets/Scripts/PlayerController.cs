@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-[RequireComponent(typeof(GroundCheck))]
+[RequireComponent(typeof(GroundCheck), typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
     private float jumpForce = 7f; // Force applied when jumping
@@ -11,6 +11,11 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider2D bc;
     private TapSwipeDetection gesture;
     private GroundCheck groundCheck;
+
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpClip;
+    [SerializeField] private AudioClip slideClip;
+    [SerializeField] private AudioClip CoinClip;
 
     private bool isGrounded = false;
     private bool isSliding = false;
@@ -25,6 +30,7 @@ public class PlayerController : MonoBehaviour
         bc = GetComponent<CapsuleCollider2D>();
         gesture = FindAnyObjectByType<TapSwipeDetection>();
         groundCheck = GetComponent<GroundCheck>();
+        audioSource = GetComponent<AudioSource>();
         originalColliderSize = bc.size;
         originalGravityScale = rb.gravityScale;
 
@@ -83,6 +89,8 @@ public class PlayerController : MonoBehaviour
     {
         if (!isGrounded) return;
 
+        audioSource.PlayOneShot(jumpClip);
+
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Reset vertical velocity
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Apply jump force
 
@@ -94,6 +102,8 @@ public class PlayerController : MonoBehaviour
         if (isSliding) return;
 
         StartCoroutine(SlideTime());
+
+        audioSource.PlayOneShot(slideClip);
 
         bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider height for sliding
         rb.gravityScale = isGrounded ? originalGravityScale : 10f;
@@ -132,6 +142,7 @@ public class PlayerController : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             ScoreManager.instance.AddDistance(10); // Add 10 points for each pickup
+            audioSource.PlayOneShot(CoinClip);
         }
 
     }

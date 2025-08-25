@@ -183,7 +183,7 @@ public class TileLevelGen : MonoBehaviour
             else if (birdRoll < obstacleProbability + birdProbability)
             {
                 //spawn bird
-                Vector3Int birdPos = new Vector3Int(colXPos, groundlevel + 6, 0); 
+                Vector3Int birdPos = new Vector3Int(colXPos, groundlevel + 5, 0); 
                 Vector3 worldpos = tilemap.CellToWorld(birdPos) + tilemap.cellSize / 2f;
 
                 GameObject bird = BirdPool.Get();

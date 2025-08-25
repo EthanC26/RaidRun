@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 1cd669302caf3cb408cce07c8a50157e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mixer: {instanceID: 0}
+  - backBtn: {instanceID: 0}
+  - MasterVolSlider: {instanceID: 0}
+  - MasterVolSliderText: {instanceID: 0}
+  - MusicVolSlider: {instanceID: 0}
+  - MusicVolSliderText: {instanceID: 0}
+  - sfxVolSlider: {instanceID: 0}
+  - sfxVolSliderText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

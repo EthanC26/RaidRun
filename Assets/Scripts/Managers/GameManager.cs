@@ -1,9 +1,14 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(ScoreManager), typeof(TimerManager), typeof(AudioSource))]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+    AudioSource audioSource;
+    public AudioClip DeathClip;
 
     public InGameMenu InGameMenu;
 
@@ -22,6 +27,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -45,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerHit()
     {
+        audioSource.PlayOneShot(DeathClip);
         EndGame(false);
     }
 
