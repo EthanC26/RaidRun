@@ -13,8 +13,8 @@ public class MainMenu : BaseMenu
     {
         base.Init(contex);
         state = MenuStates.MainMenu;
-        if(playBtn) playBtn.onClick.AddListener(() => SceneManager.LoadScene("InGame"));
-        if(controlsBtn) controlsBtn.onClick.AddListener(() => SetNextMenu(MenuStates.Controls));
+        if(playBtn) playBtn.onClick.AddListener(() => SetNextMenu(MenuStates.Mode));
+        if (controlsBtn) controlsBtn.onClick.AddListener(() => SetNextMenu(MenuStates.Controls));
         if(creditsBtn) creditsBtn.onClick.AddListener(() => SetNextMenu(MenuStates.Credits));
         Title.text = "RAID RUN";
     }

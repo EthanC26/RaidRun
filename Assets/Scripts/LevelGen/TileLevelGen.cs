@@ -1,6 +1,7 @@
+using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.Tilemaps;
 
 public class TileLevelGen : MonoBehaviour
 {
@@ -9,13 +10,16 @@ public class TileLevelGen : MonoBehaviour
 
     [Header("Tile Settings")]
     public Tile groundTile;
-    public Tile obstacleTile;
     public Tile DirtTile;
 
-    private ObjectPool<Tile> GroundPool;
-    private ObjectPool<Tile> ObstaclePool;
+    public GameObject obstaclePreFab;
 
-    [Range(0,1)]
+    private ObjectPool<Tile> GroundPool;
+    private ObjectPool<GameObject> ObstaclePool;
+
+   private List<GameObject> ActiveObstacle = new List<GameObject>();
+
+    [Range(0, 1)]
     [Tooltip("Probability of placing an obstacle tile (0 = no obstacles, 1 = all tiles are obstacles)")]
     public float obstacleProbability = 0.05f;
 
@@ -62,20 +66,31 @@ public class TileLevelGen : MonoBehaviour
             maxSize: 100
             );
 
+        ObstaclePool = new ObjectPool<GameObject>(
+            createFunc: () =>
+            {
+                GameObject obj = Instantiate(obstaclePreFab);
+                return obj;
+            },
+            actionOnGet: obj => obj.SetActive(true),
+            actionOnRelease: obj => obj.SetActive(false),
+            actionOnDestroy: null,
+            collectionCheck: false,
+            defaultCapacity: 10,
+            maxSize: 100
+        );
+
         CalculateScreenBounds();
 
-       // tilemap.ClearAllTiles();
+        
         Vector3 tileWorldSize = tilemap.cellSize;
         float tilesNeededToFillScreen = Mathf.Ceil((screenRightEdgeX - screenLeftEdgeX) / tileWorldSize.x);
-
         int totalColumns = Mathf.CeilToInt(tilesNeededToFillScreen) + initTileColums * 2;
-
         int startPositionX = Mathf.FloorToInt(screenLeftEdgeX - initTileColums);
 
-        for(int i = 0; i < totalColumns; i++)
-        {
+        for (int i = 0; i < totalColumns; i++)
             GenerateTileColum(startPositionX + i);
-        }
+        
         leftmostTileColumnXPos = startPositionX;
         rightmostTileColumnXPos = startPositionX + totalColumns - 1;
     }
@@ -93,13 +108,6 @@ public class TileLevelGen : MonoBehaviour
 
         Vector3Int titlePosition = new Vector3Int(rightmostTileColumnXPos, groundlevel - 1, 0);
         tilemap.SetTile(titlePosition, DirtTile);
-
-        // Randomly place obstacles
-        if (Random.value < obstacleProbability)
-        {
-            Vector3Int objectPos = new Vector3Int(rightmostTileColumnXPos, groundlevel + 1, 0); // Place obstacle one tile above ground
-            tilemap.SetTile(objectPos, obstacleTile);
-        }
     }
 
     void DeactivateTile(Tile tile)
@@ -108,7 +116,18 @@ public class TileLevelGen : MonoBehaviour
     }
     private void GenerateTileColum(int colXPos)
     {
-        GroundPool.Get();    
+        rightmostTileColumnXPos = colXPos;
+        GroundPool.Get();
+
+        if(Random.value < obstacleProbability)
+        {
+            Vector3Int objectPos = new Vector3Int(colXPos, groundlevel + 1, 0); // Place obstacle one tile above ground
+            Vector3 worldPosition = tilemap.CellToWorld(objectPos) + tilemap.cellSize / 2f;
+
+            GameObject obs = ObstaclePool.Get();
+            obs.transform.position = worldPosition;
+            ActiveObstacle.Add(obs);
+        }
     }
 
     private void CalculateScreenBounds()
@@ -127,11 +146,17 @@ public class TileLevelGen : MonoBehaviour
 
         float scrollAmount = scrollSpeed * Time.deltaTime;
         scrollTitles(scrollAmount);
-
+        MoveObstacles(scrollAmount);
+        RemoveOffScreenObstacles();
         ManageTiles();
+    }
 
-        //Vector3 currentPos = tilemap.transform.localPosition;
-        //tilemap.transform.localPosition = new Vector3(-scrollAccumulator, currentPos.y, currentPos.z);
+    private void MoveObstacles(float scrollAmount)
+    {
+        Vector3 movement = Vector3.left * scrollAmount;
+        foreach (var obsList in ActiveObstacle)
+           obsList.transform.position += movement;
+
     }
 
     private void scrollTitles(float scrollAmount)
@@ -139,7 +164,7 @@ public class TileLevelGen : MonoBehaviour
         scrollAccumulator += scrollAmount;
         float tileWidth = tilemap.cellSize.x;
 
-        if(scrollAccumulator >= tileWidth)
+        if (scrollAccumulator >= tileWidth)
         {
             int shiftAmount = Mathf.FloorToInt(scrollAccumulator / tileWidth);
 
@@ -177,6 +202,19 @@ public class TileLevelGen : MonoBehaviour
         //as this will cause the tiles to appear to move instead of scrolling
     }
 
+    private void RemoveOffScreenObstacles()
+    {
+        // Check if any obstacles are off-screen and remove them
+        for (int i = ActiveObstacle.Count - 1; i >= 0; i--)
+        {
+            GameObject obs = ActiveObstacle[i];
+            if (obs.transform.position.x + tilemap.cellSize.x / 2f < screenLeftEdgeX)
+            {
+                ObstaclePool.Release(obs);
+                ActiveObstacle.RemoveAt(i);
+            }
+        }
+    }
     private void ManageTiles()
     {
         //convert screen edges to tile coordinates
@@ -194,15 +232,22 @@ public class TileLevelGen : MonoBehaviour
     }
     private void RemoveLeftColumn()
     {
+
         for (int y = groundlevel; y <= groundlevel + 5; y++)
         {
             Vector3Int tilePosition = new Vector3Int(leftmostTileColumnXPos, y, 0);
-            if (tilemap.GetTile(tilePosition) == null) continue;
-            GroundPool.Release(tilemap.GetTile(tilePosition) as Tile);
+            Tile tile = tilemap.GetTile(tilePosition) as Tile;
+            if (tile != null)
+            {
+                tilemap.SetTile(tilePosition, null);
+                GroundPool.Release(tile);
+            }
         }
 
         leftmostTileColumnXPos++;
     }
+
+   
 
     private void AddRightColumn()
     {

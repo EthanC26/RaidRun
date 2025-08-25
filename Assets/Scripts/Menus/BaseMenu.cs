@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum MenuStates
 {
-    MainMenu, Credits, Controls, Pause, InGame, Settings 
+    MainMenu, Credits, Controls, Pause, InGame, Settings, Mode 
 }
 public class BaseMenu : MonoBehaviour
 {
