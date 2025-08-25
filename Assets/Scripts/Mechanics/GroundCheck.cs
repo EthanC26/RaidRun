@@ -11,7 +11,7 @@ public class GroundCheck : MonoBehaviour
     {
         GameObject newGameObject = new GameObject();
         newGameObject.transform.SetParent(transform);
-        float yOffSet = -GetComponent<BoxCollider2D>().size.y / 2f - groundCheckRadius;
+        float yOffSet = -GetComponent<CapsuleCollider2D>().size.y / 2f - groundCheckRadius;
         newGameObject.transform.localPosition = new Vector3(0,yOffSet,0);
         newGameObject.name = "GroundCheck";
         groundCheck = newGameObject.transform;

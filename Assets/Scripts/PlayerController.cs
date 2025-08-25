@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(BoxCollider2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
 [RequireComponent(typeof(GroundCheck))]
 public class PlayerController : MonoBehaviour
 {
-    private float jumpForce = 7f; // Force applied when jumping
+    private float jumpForce = 6f; // Force applied when jumping
 
     private Rigidbody2D rb;
-    private BoxCollider2D bc;
+    private CapsuleCollider2D bc;
     private TapSwipeDetection gesture;
     private GroundCheck groundCheck;
 
@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        bc = GetComponent<BoxCollider2D>();
+        bc = GetComponent<CapsuleCollider2D>();
         gesture = FindAnyObjectByType<TapSwipeDetection>();
         groundCheck = GetComponent<GroundCheck>();
 

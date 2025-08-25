@@ -13,16 +13,17 @@ public class TileLevelGen : MonoBehaviour
     public Tile DirtTile;
 
     public GameObject obstaclePreFab;
+    public GameObject BirdPreFab;
 
     private ObjectPool<Tile> GroundPool;
     private ObjectPool<GameObject> ObstaclePool;
+    private ObjectPool<GameObject> BirdPool;
+    private List<GameObject> ActiveObstacle = new List<GameObject>();
+    private List<GameObject> ActiveBirds = new List<GameObject>();
 
-   private List<GameObject> ActiveObstacle = new List<GameObject>();
-
-    [Range(0, 1)]
     [Tooltip("Probability of placing an obstacle tile (0 = no obstacles, 1 = all tiles are obstacles)")]
-    public float obstacleProbability = 0.05f;
-
+    [Range(0, 1)] public float obstacleProbability = 0.05f;
+    [Range(0, 1)] public float birdProbability = 0.05f; // Probability of spawning a bird
     [Header("Generation Settings")]
     public int initTileColums = 5;
 
@@ -80,6 +81,19 @@ public class TileLevelGen : MonoBehaviour
             maxSize: 100
         );
 
+        BirdPool = new ObjectPool<GameObject>(
+            createFunc: () =>
+            {
+                GameObject obj = Instantiate(BirdPreFab);
+                return obj;
+            },
+            actionOnGet: obj => obj.SetActive(true),
+            actionOnRelease: obj => obj.SetActive(false),
+            actionOnDestroy: null,
+            collectionCheck: false,
+            defaultCapacity: 10,
+            maxSize: 100
+        );
         CalculateScreenBounds();
 
         
@@ -128,6 +142,17 @@ public class TileLevelGen : MonoBehaviour
             obs.transform.position = worldPosition;
             ActiveObstacle.Add(obs);
         }
+
+        if(Random.value < birdProbability)
+        {
+            Vector3Int birdPos = new Vector3Int(colXPos, groundlevel + 3, 0); // Place bird two tiles above ground
+            Vector3 worldpos = tilemap.CellToWorld(birdPos) + tilemap.cellSize / 2f;
+
+            GameObject bird = BirdPool.Get();
+            bird.transform.position = worldpos;
+            ActiveBirds.Add(bird);
+
+        }
     }
 
     private void CalculateScreenBounds()
@@ -156,6 +181,8 @@ public class TileLevelGen : MonoBehaviour
         Vector3 movement = Vector3.left * scrollAmount;
         foreach (var obsList in ActiveObstacle)
            obsList.transform.position += movement;
+        foreach (var bird in ActiveBirds)
+            bird.transform.position += movement;
 
     }
 
@@ -212,6 +239,16 @@ public class TileLevelGen : MonoBehaviour
             {
                 ObstaclePool.Release(obs);
                 ActiveObstacle.RemoveAt(i);
+            }
+        }
+
+        for (int i = ActiveBirds.Count - 1; i >= 0; i--)
+        {
+            GameObject bird = ActiveBirds[i];
+            if (bird.transform.position.x + tilemap.cellSize.x / 2f < screenLeftEdgeX)
+            {
+                BirdPool.Release(bird);
+                ActiveBirds.RemoveAt(i);
             }
         }
     }
