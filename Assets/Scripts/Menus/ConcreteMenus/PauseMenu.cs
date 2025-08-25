@@ -34,4 +34,6 @@ public class PauseMenu : BaseMenu
         base.ExitState();
         Time.timeScale = 1f; // Resume the game
     }
+    private void OnDestroy() => Time.timeScale = 1.0f;
+    
 }

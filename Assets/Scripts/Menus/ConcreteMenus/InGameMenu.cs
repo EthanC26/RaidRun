@@ -1,10 +1,10 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class InGameMenu : BaseMenu
 {
+    [Header("UI Elements")]
     public Button PauseButton;
     public TMP_Text currentScore;
     public TMP_Text highScore;
@@ -14,32 +14,65 @@ public class InGameMenu : BaseMenu
     {
         base.Init(contex);
         state = MenuStates.InGame;
-        if (PauseButton) PauseButton.onClick.AddListener(() => SetNextMenu(MenuStates.Pause));
-        if (currentScore) currentScore.text = "Current Score: 0"; // Placeholder, update with actual score logic
-        if (highScore) highScore.text = "High Score: 0"; // Placeholder, update with actual high score logic
-        
-       GameManager.Instance.OnGameModeChanged += HandleGameModeChanged;
 
-        HandleGameModeChanged(GameManager.Instance.CurrentMode); // Initialize visibility based on current mode
+        // Hook up pause button
+        if (PauseButton != null)
+            PauseButton.onClick.AddListener(() => SetNextMenu(MenuStates.Pause));
+
+        // Find UI elements if not assigned in Inspector
+        if (currentScore == null)
+            currentScore = GameObject.FindWithTag("ScoreText")?.GetComponent<TMP_Text>();
+        if (time == null)
+            time = GameObject.FindWithTag("TimeText")?.GetComponent<TMP_Text>();
+
+        // Initialize UI
+        UpdateScore(ScoreManager.instance?.score ?? 0f);
+        UpdateTime(TimerManager.instance?.GetTimeRemaining() ?? 0f);
+
+        // Listen for score updates
+        if (ScoreManager.instance != null)
+            ScoreManager.instance.OnScoreChanged += UpdateScore;
+
+        // Listen for timer updates
+        if (TimerManager.instance != null)
+            TimerManager.instance.OnTimeChanged += UpdateTime;
+
+        // Show/hide time based on game mode
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameModeChanged += HandleGameModeChanged;
+            HandleGameModeChanged(GameManager.Instance.CurrentMode);
+        }
     }
 
     private void HandleGameModeChanged(GameMode mode)
     {
-       time.gameObject.SetActive(mode == GameMode.Timed);
+        if (time != null)
+            time.gameObject.SetActive(mode == GameMode.Timed);
     }
 
     public void UpdateTime(float timeValue)
     {
+        if (time == null) return;
         int seconds = Mathf.CeilToInt(timeValue);
-        if(time != null)
-        {
-            time.text = seconds.ToString();
-        }
-    }
-    private void OnDestroy()
-    {
-        GameManager.Instance.OnGameModeChanged -= HandleGameModeChanged; // Unsubscribe to avoid memory leaks
+        time.text = "TIME: " + seconds;
     }
 
-    
+    public void UpdateScore(float scoreValue)
+    {
+        if (currentScore == null) return;
+        currentScore.text = "Current Score: " + Mathf.FloorToInt(scoreValue);
+    }
+
+    private void OnDestroy()
+    {
+        if (ScoreManager.instance != null)
+            ScoreManager.instance.OnScoreChanged -= UpdateScore;
+        if (TimerManager.instance != null)
+            TimerManager.instance.OnTimeChanged -= UpdateTime;
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnGameModeChanged -= HandleGameModeChanged;
+    }
 }
+
+

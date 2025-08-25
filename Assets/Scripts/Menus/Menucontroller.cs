@@ -32,7 +32,7 @@ public class MenuController : MonoBehaviour
         }
         SetActiveState(initState);
 
-        GameManager.Instance.SetMenuController(this);
+        
 
     }
 
@@ -63,6 +63,7 @@ public class MenuController : MonoBehaviour
 
         if (!isJumpingBack) menuStack.Push(newState);
     }
+   
     public void QuitGame()
     {
 #if UNITY_EDITOR

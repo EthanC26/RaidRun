@@ -1,82 +1,80 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
-    public static GameManager Instance => instance;
-    public InGameMenu InGameMenu;
+    public static GameManager Instance { get; private set; }
 
-    public static float TimeLimit = 60f;
-    public static float timer;
+    public InGameMenu InGameMenu;
 
     public GameMode CurrentMode;
     public event System.Action<GameMode> OnGameModeChanged;
 
-    private MenuController currentMenuController;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    private void Awake()
     {
-        if(!instance)
+        if (Instance == null)
         {
-            instance = this;
-            DontDestroyOnLoad(this);
-            return;
-        }
-    }
-    private void Start()
-    {
-        if(CurrentMode == GameMode.Timed)
-        {
-            timer = TimeLimit;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
-            timer = 0f; // Reset timer for Endless mode
+            Destroy(gameObject);
         }
     }
 
-    private void Update()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (CurrentMode == GameMode.Timed && timer > 0)
+        // Fetch the UI from the new scene
+        InGameMenu = GameObject.FindFirstObjectByType<InGameMenu>();
+
+        // Reset score when gameplay scene loads
+        if (scene.name.Contains("Game")) // adjust as needed
         {
-            timer -= Time.deltaTime;
-            if(timer < 0f) timer = 0f; // Ensure timer doesn't go negative
-            if (InGameMenu != null)
-            {
-                InGameMenu.UpdateTime(timer);
-            }
-            if(timer == 0f)
-            {
-                EndGame();
-            }
+            ScoreManager.instance?.ResetScore();
+        }
+
+        // Update UI immediately
+        if (InGameMenu != null)
+        {
+            InGameMenu.UpdateScore(ScoreManager.instance?.score ?? 0f);
+            InGameMenu.UpdateTime(TimerManager.instance?.GetTimeRemaining() ?? 0f);
         }
     }
 
-    private void EndGame()
+    public void PlayerHit()
     {
-        Debug.Log("Game Over! Timer has reached zero.");
-        SceneManager.LoadScene("MainMenu"); // Replace with your actual game over scene
+        EndGame(false);
     }
 
-    public void SetMenuController(MenuController newMenuController) => currentMenuController = newMenuController;
+    private void EndGame(bool victory)
+    {
+        if (InGameMenu == null)
+        {
+            InGameMenu = GameObject.FindFirstObjectByType<InGameMenu>();
+            if (InGameMenu == null) return;
+        }
+
+        InGameMenu.SetNextMenu(victory ? MenuStates.Victory : MenuStates.GameOver);
+    }
 
     public void UpdateGameMode(GameMode newMode)
     {
         CurrentMode = newMode;
-        Debug.Log($"Game mode updated to: {newMode}");
-
         OnGameModeChanged?.Invoke(newMode);
+    }
 
-
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 
-
 public enum GameMode
 {
-   Timed,
-   Endless
+    Timed,
+    Endless
 }
+

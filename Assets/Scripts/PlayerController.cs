@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GroundCheck))]
 public class PlayerController : MonoBehaviour
 {
-    private float jumpForce = 6f; // Force applied when jumping
+    private float jumpForce = 7f; // Force applied when jumping
 
     private Rigidbody2D rb;
     private CapsuleCollider2D bc;
@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = false;
     private bool isSliding = false;
 
+    private Vector2 originalColliderSize;
+    private float originalGravityScale;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +25,8 @@ public class PlayerController : MonoBehaviour
         bc = GetComponent<CapsuleCollider2D>();
         gesture = FindAnyObjectByType<TapSwipeDetection>();
         groundCheck = GetComponent<GroundCheck>();
+        originalColliderSize = bc.size;
+        originalGravityScale = rb.gravityScale;
 
         gesture.OnTap += HandleTap;
         gesture.OnDoubleTap += HandleDoubleTap;
@@ -62,6 +67,7 @@ public class PlayerController : MonoBehaviour
         {
             case TapSwipeDetection.SwipeDirection.Up:
                 Jump();
+                CancelSlide();
                 break;
             case TapSwipeDetection.SwipeDirection.Down:
                 Slide();
@@ -80,34 +86,53 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Reset vertical velocity
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Apply jump force
 
+
     }
 
     private void Slide()
     {
-        if (isGrounded && !isSliding)
-        {
-            StartCoroutine(SlideTime());
-            Debug.Log("Sliding");
-            bc.size = new Vector2(bc.size.x, bc.size.y / 2f); 
-            isSliding = true; 
-        }
+        if (isSliding) return;
 
-        else if(!isGrounded && !isSliding)
-        {
-            StartCoroutine(SlideTime());
+        StartCoroutine(SlideTime());
 
-            rb.gravityScale = 10;
-            bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider size for sliding
-            isSliding = true; // Set sliding state to true
+        bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider height for sliding
+        rb.gravityScale = isGrounded ? originalGravityScale : 10f;
+        isSliding = true;
+    }
+    private void CancelSlide()
+    {
+        if (isGrounded && isSliding)
+        {
+            isSliding = false;
+            Debug.Log("Slide cancelled");
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Reset vertical velocity
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Apply jump force
         }
+        else return;
     }
 
     IEnumerator SlideTime()
     {
-        yield return new WaitForSeconds(0.3f); // Duration of the slide
-        rb.gravityScale = 1; // Reset gravity scale after sliding
-        bc.size = new Vector2(bc.size.x, bc.size.y * 2f); // Reset collider size after sliding
+        yield return new WaitForSeconds(0.5f); // Duration of the slide
+        rb.gravityScale = originalGravityScale;
+        bc.size = originalColliderSize; // Reset collider size
         isSliding = false;
-        Debug.Log("Slide ended");
+       
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+      
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            GameManager.Instance.PlayerHit();
+        }
+
+        if(collision.gameObject.CompareTag("Pickup"))
+        {
+            collision.gameObject.SetActive(false);
+            ScoreManager.instance.AddDistance(10); // Add 10 points for each pickup
+        }
+
     }
 }

@@ -14,18 +14,28 @@ public class TileLevelGen : MonoBehaviour
 
     public GameObject obstaclePreFab;
     public GameObject BirdPreFab;
+    public GameObject PickupPreFab;
 
     private ObjectPool<Tile> GroundPool;
     private ObjectPool<GameObject> ObstaclePool;
     private ObjectPool<GameObject> BirdPool;
+    private ObjectPool<GameObject> PickupPool;
+
     private List<GameObject> ActiveObstacle = new List<GameObject>();
     private List<GameObject> ActiveBirds = new List<GameObject>();
+    private List<GameObject> ActivePickups = new List<GameObject>();
 
     [Tooltip("Probability of placing an obstacle tile (0 = no obstacles, 1 = all tiles are obstacles)")]
     [Range(0, 1)] public float obstacleProbability = 0.05f;
     [Range(0, 1)] public float birdProbability = 0.05f; // Probability of spawning a bird
+    [Range(0, 1)] public float pickupProbability = 0.02f; // Probability of spawning a pickup
     [Header("Generation Settings")]
     public int initTileColums = 5;
+
+    [Header("Obstacle Spacing")]
+    public int minObstacleSpacing = 1;
+    public int maxObstacleSpacing = 3;
+    private int obstaclecooldown = 0;
 
     private Tilemap tilemap;
     private Camera mainCamera;
@@ -94,6 +104,20 @@ public class TileLevelGen : MonoBehaviour
             defaultCapacity: 10,
             maxSize: 100
         );
+
+        PickupPool = new ObjectPool<GameObject>(
+            createFunc: () =>
+            {
+                GameObject obj = Instantiate(PickupPreFab);
+                return obj;
+            },
+            actionOnGet: obj => obj.SetActive(true),
+            actionOnRelease: obj => obj.SetActive(false),
+            actionOnDestroy: null,
+            collectionCheck: false,
+            defaultCapacity: 10,
+            maxSize: 100
+        );
         CalculateScreenBounds();
 
         
@@ -133,26 +157,52 @@ public class TileLevelGen : MonoBehaviour
         rightmostTileColumnXPos = colXPos;
         GroundPool.Get();
 
-        if(Random.value < obstacleProbability)
+        if(obstaclecooldown > 0)
         {
-            Vector3Int objectPos = new Vector3Int(colXPos, groundlevel + 1, 0); // Place obstacle one tile above ground
-            Vector3 worldPosition = tilemap.CellToWorld(objectPos) + tilemap.cellSize / 2f;
-
-            GameObject obs = ObstaclePool.Get();
-            obs.transform.position = worldPosition;
-            ActiveObstacle.Add(obs);
-        }
-
-        if(Random.value < birdProbability)
-        {
-            Vector3Int birdPos = new Vector3Int(colXPos, groundlevel + 3, 0); // Place bird two tiles above ground
-            Vector3 worldpos = tilemap.CellToWorld(birdPos) + tilemap.cellSize / 2f;
-
-            GameObject bird = BirdPool.Get();
-            bird.transform.position = worldpos;
-            ActiveBirds.Add(bird);
+            obstaclecooldown--;
+            return;
 
         }
+            float obstacleRoll = Random.value;
+            float birdRoll = Random.value;
+            int randomHeight = Random.Range(groundlevel + 3, groundlevel + 7);
+
+        if (obstacleRoll < obstacleProbability)
+            {
+                //spawn rock
+                Vector3Int objectPos = new Vector3Int(colXPos, groundlevel + 1, 0); // Place obstacle one tile above ground
+                Vector3 worldPosition = tilemap.CellToWorld(objectPos) + tilemap.cellSize / 2f;
+
+                GameObject obs = ObstaclePool.Get();
+                obs.transform.position = worldPosition;
+                ActiveObstacle.Add(obs);
+
+                
+            }
+
+            else if (birdRoll < obstacleProbability + birdProbability)
+            {
+                //spawn bird
+                Vector3Int birdPos = new Vector3Int(colXPos, groundlevel + 6, 0); 
+                Vector3 worldpos = tilemap.CellToWorld(birdPos) + tilemap.cellSize / 2f;
+
+                GameObject bird = BirdPool.Get();
+                bird.transform.position = worldpos;
+                ActiveBirds.Add(bird);
+
+               
+            }
+            else if(Random.value < pickupProbability)
+            {
+            //spawn pickup
+            Vector3Int pickupPos = new Vector3Int(colXPos, randomHeight, 0); // Place pickup two tiles above ground
+            Vector3 worldpos = tilemap.CellToWorld(pickupPos) + tilemap.cellSize / 2f;
+
+            GameObject pickup = PickupPool.Get();
+            pickup.transform.position = worldpos;
+            ActivePickups.Add(pickup);
+            }
+        obstaclecooldown = Random.Range(minObstacleSpacing, maxObstacleSpacing + 1);
     }
 
     private void CalculateScreenBounds()
@@ -170,6 +220,9 @@ public class TileLevelGen : MonoBehaviour
         CalculateScreenBounds();
 
         float scrollAmount = scrollSpeed * Time.deltaTime;
+
+        ScoreManager.instance.AddDistance(scrollAmount);
+
         scrollTitles(scrollAmount);
         MoveObstacles(scrollAmount);
         RemoveOffScreenObstacles();
@@ -183,6 +236,8 @@ public class TileLevelGen : MonoBehaviour
            obsList.transform.position += movement;
         foreach (var bird in ActiveBirds)
             bird.transform.position += movement;
+        foreach (var pickup in ActivePickups)
+            pickup.transform.position += movement;
 
     }
 
@@ -249,6 +304,16 @@ public class TileLevelGen : MonoBehaviour
             {
                 BirdPool.Release(bird);
                 ActiveBirds.RemoveAt(i);
+            }
+        }
+        
+        for (int i = ActivePickups.Count - 1; i >= 0; i--)
+        {
+            GameObject pickup = ActivePickups[i];
+            if (pickup.transform.position.x + tilemap.cellSize.x / 2f < screenLeftEdgeX)
+            {
+                PickupPool.Release(pickup);
+                ActivePickups.RemoveAt(i);
             }
         }
     }
