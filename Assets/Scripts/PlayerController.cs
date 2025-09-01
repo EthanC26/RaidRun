@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(SlideTime());
 
-        audioSource.PlayOneShot(slideClip);
+       // audioSource.PlayOneShot(slideClip);
 
         bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider height for sliding
         rb.gravityScale = isGrounded ? originalGravityScale : 10f;
