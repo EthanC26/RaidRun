@@ -8,6 +8,7 @@ public class GameOverMenu : BaseMenu
     public Button QuitBtn;
     public Button MainMenuBtn;
     public TMP_Text TitleText;
+    public TMP_Text ScoreText;
 
     public override void Init(MenuController contex)
     {
@@ -19,8 +20,16 @@ public class GameOverMenu : BaseMenu
         if(MainMenuBtn) MainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("MainMenu"));
 
         if (TitleText) TitleText.text = "GAME OVER";
+
+        if (ScoreManager.instance != null)
+            ScoreManager.instance.OnScoreChanged += UpdateScore;
     }
-    
+
+    public void UpdateScore(float scoreValue)//show score (time)
+    {
+        if (ScoreText == null) return;
+        ScoreText.text = "Score: " + Mathf.FloorToInt(scoreValue);
+    }
     public override void EnterState()
     {
         base.EnterState();

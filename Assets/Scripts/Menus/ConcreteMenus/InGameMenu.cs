@@ -56,6 +56,7 @@ public class InGameMenu : BaseMenu
         if (time == null) return;
         int seconds = Mathf.CeilToInt(timeValue);
         time.text = "TIME: " + seconds;
+
     }
 
     public void UpdateScore(float scoreValue)

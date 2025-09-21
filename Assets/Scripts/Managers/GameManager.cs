@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
         EndGame(false);
     }
 
+   
+
     private void EndGame(bool victory)
     {
         if (InGameMenu == null)
