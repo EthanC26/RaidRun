@@ -11,14 +11,18 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider2D bc;
     private TapSwipeDetection gesture;
     private GroundCheck groundCheck;
+    private Animator anim;
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip jumpClip;
     [SerializeField] private AudioClip slideClip;
     [SerializeField] private AudioClip CoinClip;
+    [SerializeField] private AudioClip HitClip;
+
 
     private bool isGrounded = false;
     private bool isSliding = false;
+    private bool isHit = false;
 
     private Vector2 originalColliderSize;
     private float originalGravityScale;
@@ -31,6 +35,8 @@ public class PlayerController : MonoBehaviour
         gesture = FindAnyObjectByType<TapSwipeDetection>();
         groundCheck = GetComponent<GroundCheck>();
         audioSource = GetComponent<AudioSource>();
+        anim = GetComponent<Animator>();
+
         originalColliderSize = bc.size;
         originalGravityScale = rb.gravityScale;
 
@@ -42,6 +48,10 @@ public class PlayerController : MonoBehaviour
     {
         // Check if the player is grounded
         isGrounded = groundCheck.IsGrounded();
+
+        anim.SetBool("IsGrounded", isGrounded);
+        anim.SetBool("IsSliding", isSliding);
+        anim.SetBool("IsHit", isHit);
     }
 
     private void OnDestroy()
@@ -103,7 +113,7 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(SlideTime());
 
-       // audioSource.PlayOneShot(slideClip);
+        audioSource.PlayOneShot(slideClip);
 
         bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider height for sliding
         rb.gravityScale = isGrounded ? originalGravityScale : 10f;
@@ -130,20 +140,34 @@ public class PlayerController : MonoBehaviour
        
     }
 
+    IEnumerator HandleHit()
+    {
+        isHit = true;
+        audioSource.PlayOneShot(HitClip);
+
+        yield return new WaitForSeconds(0.2f);
+        GameManager.Instance.PlayerHit();
+        isHit = false;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
       
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            GameManager.Instance.PlayerHit();
-        }
-
-        if(collision.gameObject.CompareTag("Pickup"))
-        {
-            collision.gameObject.SetActive(false);
-            ScoreManager.instance.AddDistance(10); // Add 10 points for each pickup
-            audioSource.PlayOneShot(CoinClip);
+            StartCoroutine(HandleHit());
         }
 
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Pickup"))
+        {
+            other.gameObject.SetActive(false);
+            ScoreManager.instance.AddDistance(10); // Add 10 points for each pickup
+            audioSource.PlayOneShot(CoinClip);
+        }
+    }
+
 }

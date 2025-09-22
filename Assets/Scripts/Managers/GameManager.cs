@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     AudioSource audioSource;
-    public AudioClip DeathClip;
+    public AudioClip GameOverClip;
 
     public InGameMenu InGameMenu;
 
@@ -55,13 +55,18 @@ public class GameManager : MonoBehaviour
 
     public void PlayerHit()
     {
-        audioSource.PlayOneShot(DeathClip);
-        EndGame(false);
+        audioSource.PlayOneShot(GameOverClip);
+        WinGame(false);
     }
 
+    public void TimerEnding()
+    {
+        audioSource.PlayOneShot(GameOverClip);
+        WinGame(true);
+    }
    
 
-    private void EndGame(bool victory)
+    private void WinGame(bool victory)
     {
         if (InGameMenu == null)
         {

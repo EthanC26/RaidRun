@@ -57,6 +57,11 @@ public class InGameMenu : BaseMenu
         int seconds = Mathf.CeilToInt(timeValue);
         time.text = "TIME: " + seconds;
 
+        if(timeValue <= 0f)
+        {
+            GameManager.Instance.TimerEnding();
+        }
+
     }
 
     public void UpdateScore(float scoreValue)

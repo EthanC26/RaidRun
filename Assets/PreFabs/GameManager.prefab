@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4687d89f75a35614782e5b9f0379a844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeathClip: {fileID: 0}
+  GameOverClip: {fileID: 8300000, guid: 065d6ae42f0571447ba82d31f83972e1, type: 3}
   InGameMenu: {fileID: 0}
   CurrentMode: 0
 --- !u!114 &2030936952523687276
