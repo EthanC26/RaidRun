@@ -66,12 +66,14 @@ public class PlayerController : MonoBehaviour
 
     private void HandleTap(Vector2 position)
     {
-        Debug.Log($"Tap detected at position: {position}");
+        return;
+        //Debug.Log($"Tap detected at position: {position}");
     }
 
     private void HandleDoubleTap(Vector2 position)
     {
-        Debug.Log($"Double Tap detected at position: {position}");
+        return;
+        //Debug.Log($"Double Tap detected at position: {position}");
 
     }
 
@@ -110,14 +112,14 @@ public class PlayerController : MonoBehaviour
     private void Slide()
     {
         if (isSliding) return;
-
+        isSliding = true;
         StartCoroutine(SlideTime());
 
         audioSource.PlayOneShot(slideClip);
 
         bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider height for sliding
         rb.gravityScale = isGrounded ? originalGravityScale : 10f;
-        isSliding = true;
+        rb.gravityScale = isGrounded ? originalGravityScale : 10f;
     }
     private void CancelSlide()
     {

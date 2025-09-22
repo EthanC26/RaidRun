@@ -165,7 +165,7 @@ PlayerSettings:
   androidMinAspectRatio: 1
   applicationIdentifier:
     Android: com.ChilledInc.RaidRun
-    Standalone: com.DefaultCompany.2D-URP
+    Standalone: com.ChilledInc.RaidRun
   buildNumber:
     Standalone: 0
     VisionOS: 0

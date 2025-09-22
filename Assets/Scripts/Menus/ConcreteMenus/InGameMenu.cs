@@ -7,7 +7,6 @@ public class InGameMenu : BaseMenu
     [Header("UI Elements")]
     public Button PauseButton;
     public TMP_Text currentScore;
-    public TMP_Text highScore;
     public TMP_Text time;
 
     public override void Init(MenuController contex)
@@ -57,7 +56,7 @@ public class InGameMenu : BaseMenu
         int seconds = Mathf.CeilToInt(timeValue);
         time.text = "TIME: " + seconds;
 
-        if(timeValue <= 0f)
+        if(timeValue <= 0f && GameManager.Instance.CurrentMode == GameMode.Timed)
         {
             GameManager.Instance.TimerEnding();
         }

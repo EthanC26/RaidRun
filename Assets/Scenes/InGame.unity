@@ -2443,9 +2443,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  PauseButton: {fileID: 0}
+  PauseButton: {fileID: 1572476867}
   currentScore: {fileID: 1092828121}
-  highScore: {fileID: 0}
   time: {fileID: 396945701}
 --- !u!1 &1426277057
 GameObject:

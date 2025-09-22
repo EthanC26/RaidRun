@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class CreditsMenu : BaseMenu
@@ -14,6 +13,6 @@ public class CreditsMenu : BaseMenu
         state = MenuStates.Credits;
         if (backBtn) backBtn.onClick.AddListener(() => SetNextMenu(MenuStates.MainMenu));
         creditsTitleTxt.text = "CREDITS";
-        creditsTxt.text = "TEMP";
+        creditsTxt.text = "Game developed by Ethan Cullen\nThanks for playing!";
     }
 }

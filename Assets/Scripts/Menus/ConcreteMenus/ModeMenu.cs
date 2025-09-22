@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -7,12 +6,16 @@ public class ModeMenu : BaseMenu
 {
     public Button TimedMode;
     public Button EndlessMode;
+    public Button backBtn;
     public TMP_Text ModeTitle;
 
     public override void Init(MenuController contex)
     {
         base.Init(contex);
         state = MenuStates.Mode;
+
+        if (backBtn) backBtn.onClick.AddListener(JumpBack);
+
         if (TimedMode)
         {
             TimedMode.onClick.AddListener(() =>
