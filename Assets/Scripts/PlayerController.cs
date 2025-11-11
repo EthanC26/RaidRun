@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
-[RequireComponent(typeof(GroundCheck), typeof(AudioSource))]
+[RequireComponent(typeof(GroundCheck), typeof(AudioSource), typeof (ShieldManager))]
 public class PlayerController : MonoBehaviour
 {
     private float jumpForce = 7f; // Force applied when jumping
@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private TapSwipeDetection gesture;
     private GroundCheck groundCheck;
     private Animator anim;
+    private ShieldManager SM;
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip jumpClip;
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = false;
     private bool isSliding = false;
     private bool isHit = false;
+    private bool isInvincible = false;
 
     private Vector2 originalColliderSize;
     private float originalGravityScale;
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
         groundCheck = GetComponent<GroundCheck>();
         audioSource = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
+        SM = GetComponent<ShieldManager>();
 
         originalColliderSize = bc.size;
         originalGravityScale = rb.gravityScale;
@@ -153,14 +156,28 @@ public class PlayerController : MonoBehaviour
         isHit = false;
     }
 
+    IEnumerator Invinablity()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(2f);
+        isInvincible = false;
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-      
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            StartCoroutine(HandleHit());
+            if (SM.isShieldActive)
+            {
+                // Shield blocks damage
+                SM.DeactivateShield();
+                StartCoroutine(Invinablity());
+            }
+            else if (!isInvincible)
+            {
+                // Take damage if not invincible
+                StartCoroutine(HandleHit());
+            }
         }
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -171,6 +188,13 @@ public class PlayerController : MonoBehaviour
             ScoreManager.instance.AddDistance(10); // Add 10 points for each pickup
             audioSource.PlayOneShot(CoinClip);
         }
+
+        if(other.gameObject.CompareTag("Shield") && SM.isShieldActive == false)
+        {
+            other.gameObject.SetActive(false);
+            SM.ActivateShield();
+        }
+
     }
 
 }

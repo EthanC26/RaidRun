@@ -1468,9 +1468,11 @@ MonoBehaviour:
   obstaclePreFab: {fileID: 2655006606723912318, guid: 76197616eb34efe4f8c7d644d64a7d9c, type: 3}
   BirdPreFab: {fileID: 3533848708560052826, guid: a56fc1cc885bb71499e468db425a70d3, type: 3}
   PickupPreFab: {fileID: 8466428262649131348, guid: 901e601c151cd1842a241258e2082a54, type: 3}
+  ShieldPreFab: {fileID: 8730100996544837777, guid: 1ce5bcbdad5db8749bb5f17fe9ebfc50, type: 3}
   obstacleProbability: 0.1
   birdProbability: 0.048
   pickupProbability: 0.02
+  shieldProbability: 0.03
   initTileColums: 5
   minObstacleSpacing: 2
   maxObstacleSpacing: 3

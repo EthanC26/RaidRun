@@ -8,6 +8,7 @@ TagManager:
   - Pickup
   - ScoreText
   - TimeText
+  - Shield
   layers:
   - Default
   - TransparentFX

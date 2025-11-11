@@ -15,20 +15,24 @@ public class TileLevelGen : MonoBehaviour
     public GameObject obstaclePreFab;
     public GameObject BirdPreFab;
     public GameObject PickupPreFab;
+    public GameObject ShieldPreFab;
 
     private ObjectPool<Tile> GroundPool;
     private ObjectPool<GameObject> ObstaclePool;
     private ObjectPool<GameObject> BirdPool;
     private ObjectPool<GameObject> PickupPool;
+    private ObjectPool<GameObject> ShieldPool;
 
     private List<GameObject> ActiveObstacle = new List<GameObject>();
     private List<GameObject> ActiveBirds = new List<GameObject>();
     private List<GameObject> ActivePickups = new List<GameObject>();
+    private List<GameObject> ActiveShields = new List<GameObject>();
 
     [Tooltip("Probability of placing an obstacle tile (0 = no obstacles, 1 = all tiles are obstacles)")]
     [Range(0, 1)] public float obstacleProbability = 0.05f;
     [Range(0, 1)] public float birdProbability = 0.05f; // Probability of spawning a bird
     [Range(0, 1)] public float pickupProbability = 0.02f; // Probability of spawning a pickup
+    [Range(0, 1)] public float shieldProbability = 0.01f; // Probability of spawning a shield
     [Header("Generation Settings")]
     public int initTileColums = 5;
 
@@ -118,8 +122,22 @@ public class TileLevelGen : MonoBehaviour
             defaultCapacity: 10,
             maxSize: 100
         );
-        CalculateScreenBounds();
 
+        ShieldPool = new ObjectPool<GameObject>(
+            createFunc: () =>
+            {
+                GameObject obj = Instantiate(ShieldPreFab);
+                return obj;
+            },
+            actionOnGet: obj => obj.SetActive(true),
+            actionOnRelease: obj => obj.SetActive(false),
+            actionOnDestroy: null,
+            collectionCheck: false,
+            defaultCapacity: 10,
+            maxSize: 100
+        );
+
+        CalculateScreenBounds();
         
         Vector3 tileWorldSize = tilemap.cellSize;
         float tilesNeededToFillScreen = Mathf.Ceil((screenRightEdgeX - screenLeftEdgeX) / tileWorldSize.x);
@@ -202,6 +220,17 @@ public class TileLevelGen : MonoBehaviour
             pickup.transform.position = worldpos;
             ActivePickups.Add(pickup);
             }
+
+        else if(Random.value < shieldProbability)
+        {
+            //spawn shield
+            Vector3Int shieldPos = new Vector3Int(colXPos, randomHeight, 0); // Place shield two tiles above ground
+            Vector3 worldpos = tilemap.CellToWorld(shieldPos) + tilemap.cellSize / 2f;
+
+            GameObject shield = ShieldPool.Get();
+            shield.transform.position = worldpos;
+            ActiveShields.Add(shield);
+        }
         obstaclecooldown = Random.Range(minObstacleSpacing, maxObstacleSpacing + 1);
     }
 
@@ -242,6 +271,8 @@ public class TileLevelGen : MonoBehaviour
             bird.transform.position += movement;
         foreach (var pickup in ActivePickups)
             pickup.transform.position += movement;
+        foreach (var shield in ActiveShields)
+            shield.transform.position += movement;
 
     }
 
@@ -318,6 +349,16 @@ public class TileLevelGen : MonoBehaviour
             {
                 PickupPool.Release(pickup);
                 ActivePickups.RemoveAt(i);
+            }
+        }
+
+        for (int i = ActiveShields.Count - 1; i >= 0; i--)
+        {
+            GameObject shield = ActiveShields[i];
+            if (shield.transform.position.x + tilemap.cellSize.x / 2f < screenLeftEdgeX)
+            {
+                ShieldPool.Release(shield);
+                ActiveShields.RemoveAt(i);
             }
         }
     }
