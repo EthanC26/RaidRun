@@ -84,8 +84,10 @@ public class PlayerController : MonoBehaviour
         switch (direction)
         {
             case TapSwipeDetection.SwipeDirection.Up:
-                Jump();
-                CancelSlide();
+                if(isGrounded == true)
+                    Jump();
+                else if(isGrounded == false)
+                    CancelSlide();
                 break;
             case TapSwipeDetection.SwipeDirection.Down:
                 Slide();
