@@ -219,7 +219,11 @@ public class TileLevelGen : MonoBehaviour
     {
         CalculateScreenBounds();
 
-        float scrollAmount = scrollSpeed * Time.deltaTime;
+        float distance = ScoreManager.instance.score;
+
+        float currentScrollSpeed = scrollSpeed + distance * 0.01f; // Increase speed based on distance
+        
+        float scrollAmount = currentScrollSpeed * Time.deltaTime;
 
         ScoreManager.instance.AddDistance(scrollAmount);
 

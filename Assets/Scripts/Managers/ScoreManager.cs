@@ -35,7 +35,7 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    public void AddDistance(float distance)
+    public void AddDistance(float distance)//setting the score based on distance
     {
         score += distance;
         OnScoreChanged?.Invoke(score);
