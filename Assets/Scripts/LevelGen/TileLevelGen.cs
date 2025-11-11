@@ -221,7 +221,7 @@ public class TileLevelGen : MonoBehaviour
 
         float distance = ScoreManager.instance.score;
 
-        float currentScrollSpeed = scrollSpeed + distance * 0.01f; // Increase speed based on distance
+        float currentScrollSpeed = scrollSpeed + distance * 0.03f; // Increase speed based on distance
         
         float scrollAmount = currentScrollSpeed * Time.deltaTime;
 
