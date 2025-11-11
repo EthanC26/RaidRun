@@ -3,7 +3,7 @@ using UnityEngine;
 public class ParallaxBackground : MonoBehaviour
 {
     [SerializeField] private GameObject[] Backgrounds;  // 2 copies per layer
-    [SerializeField] private float[] scrollingSpeed;    // One speed per layer
+    [SerializeField] private float[] scrollingSpeed;    // one speed per background
 
     private float[] backgroundWidths;
 

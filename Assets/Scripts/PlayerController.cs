@@ -126,7 +126,6 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && isSliding)
         {
             isSliding = false;
-            Debug.Log("Slide cancelled");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Reset vertical velocity
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Apply jump force
         }
