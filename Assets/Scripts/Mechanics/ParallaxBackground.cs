@@ -3,8 +3,8 @@ using UnityEngine;
 public class ParallaxBackground : MonoBehaviour
 {
     [SerializeField] private GameObject[] Backgrounds;  // 2 copies per layer
-    [SerializeField] private float[] scrollingSpeed;    // one speed per background
-
+    [SerializeField] private float[] scrollingSpeed;    // one speed per
+      
     private float[] backgroundWidths;
 
     void Start()
@@ -29,8 +29,10 @@ public class ParallaxBackground : MonoBehaviour
     {
         for (int i = 0; i < Backgrounds.Length; i++)
         {
+            float distance = ScoreManager.instance.score;
             float width = backgroundWidths[i];
             float speed = scrollingSpeed[i / 2];
+            float currentSpeed = speed + (distance / 100); // Increase speed based on distance
 
             Backgrounds[i].transform.position += Vector3.left * speed * Time.deltaTime;
 
