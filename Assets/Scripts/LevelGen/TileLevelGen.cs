@@ -11,6 +11,8 @@ public class TileLevelGen : MonoBehaviour
     [Header("Tile Settings")]
     public Tile groundTile;
     public Tile DirtTile;
+    public Tile largeGrassTile;
+    public Tile BushTile;
 
     public GameObject obstaclePreFab;
     public GameObject BirdPreFab;
@@ -33,6 +35,9 @@ public class TileLevelGen : MonoBehaviour
     [Range(0, 1)] public float birdProbability = 0.05f; // Probability of spawning a bird
     [Range(0, 1)] public float pickupProbability = 0.02f; // Probability of spawning a pickup
     [Range(0, 1)] public float shieldProbability = 0.01f; // Probability of spawning a shield
+    [Range(0, 1)] public float backgroundBushSpawnProbability = 0.2f; // Probability of spawning a bush in the background
+    [Range(0, 1)] public float backgroundGrassSpawnProbability = 0.03f; // Probability of spawning a flower in the background
+
     [Header("Generation Settings")]
     public int initTileColums = 5;
 
@@ -52,6 +57,8 @@ public class TileLevelGen : MonoBehaviour
     private float screenLeftEdgeX;
     private float screenRightEdgeX;
     private float scrollAccumulator = 0f;
+
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -164,6 +171,26 @@ public class TileLevelGen : MonoBehaviour
 
         Vector3Int titlePosition = new Vector3Int(rightmostTileColumnXPos, groundlevel - 1, 0);
         tilemap.SetTile(titlePosition, DirtTile);
+
+        // Randomly add grass or flowers on top of the ground tile
+        float backgroundObjectRoll = Random.value;
+
+        if (backgroundObjectRoll < backgroundGrassSpawnProbability)
+        {
+            Vector3Int grassPosition = new Vector3Int(rightmostTileColumnXPos, groundlevel + 1, 0);
+            tilemap.SetTile(grassPosition, largeGrassTile);
+        }
+        
+        else if (backgroundObjectRoll < backgroundBushSpawnProbability)
+        {
+            Vector3Int bushPosition = new Vector3Int(rightmostTileColumnXPos, groundlevel + 1, 0);
+            tilemap.SetTile(bushPosition, BushTile);
+        }
+
+        else
+        {
+            // No decoration
+        }
     }
 
     void DeactivateTile(Tile tile)
@@ -183,8 +210,8 @@ public class TileLevelGen : MonoBehaviour
         }
             float obstacleRoll = Random.value;
             float birdRoll = Random.value;
-            int randomHeight = Random.Range(groundlevel + 3, groundlevel + 7);
-
+            int randomPickupHeight = Random.Range(groundlevel + 3, groundlevel + 7);
+            int randomBirdHeight = Random.Range(groundlevel + 3, groundlevel + 5);
         if (obstacleRoll < obstacleProbability)
             {
                 //spawn rock
@@ -201,7 +228,7 @@ public class TileLevelGen : MonoBehaviour
             else if (birdRoll < obstacleProbability + birdProbability)
             {
                 //spawn bird
-                Vector3Int birdPos = new Vector3Int(colXPos, groundlevel + 5, 0); 
+                Vector3Int birdPos = new Vector3Int(colXPos, randomBirdHeight, 0); 
                 Vector3 worldpos = tilemap.CellToWorld(birdPos) + tilemap.cellSize / 2f;
 
                 GameObject bird = BirdPool.Get();
@@ -213,7 +240,7 @@ public class TileLevelGen : MonoBehaviour
             else if(Random.value < pickupProbability)
             {
             //spawn pickup
-            Vector3Int pickupPos = new Vector3Int(colXPos, randomHeight, 0); // Place pickup two tiles above ground
+            Vector3Int pickupPos = new Vector3Int(colXPos, randomPickupHeight, 0); // Place pickup two tiles above ground
             Vector3 worldpos = tilemap.CellToWorld(pickupPos) + tilemap.cellSize / 2f;
 
             GameObject pickup = PickupPool.Get();
@@ -224,7 +251,7 @@ public class TileLevelGen : MonoBehaviour
         else if(Random.value < shieldProbability)
         {
             //spawn shield
-            Vector3Int shieldPos = new Vector3Int(colXPos, randomHeight, 0); // Place shield two tiles above ground
+            Vector3Int shieldPos = new Vector3Int(colXPos, randomPickupHeight, 0); // Place shield two tiles above ground
             Vector3 worldpos = tilemap.CellToWorld(shieldPos) + tilemap.cellSize / 2f;
 
             GameObject shield = ShieldPool.Get();
@@ -250,7 +277,7 @@ public class TileLevelGen : MonoBehaviour
 
         float distance = ScoreManager.instance.score;
 
-        float currentScrollSpeed = scrollSpeed + distance * 0.03f; // Increase speed based on distance
+        float currentScrollSpeed = scrollSpeed + (distance / 100); // Increase speed based on distance
         
         float scrollAmount = currentScrollSpeed * Time.deltaTime;
 

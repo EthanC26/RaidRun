@@ -32,16 +32,19 @@ public class ParallaxBackground : MonoBehaviour
             float distance = ScoreManager.instance.score;
             float width = backgroundWidths[i];
             float speed = scrollingSpeed[i / 2];
-            float currentSpeed = speed + (distance / 100); // Increase speed based on distance
+            float currentSpeed = speed + (distance * 0.03f); // Increase speed based on distance
 
-            Backgrounds[i].transform.position += Vector3.left * speed * Time.deltaTime;
+            Backgrounds[i].transform.position += Vector3.left * currentSpeed * Time.deltaTime;
 
             if (Backgrounds[i].transform.position.x <= -width)
             {
                 Backgrounds[i].transform.position += new Vector3(width * 2f, 0f, 0f);
             }
+
         }
     }
+
+    
 
 }
 

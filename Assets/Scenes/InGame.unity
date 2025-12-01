@@ -1462,9 +1462,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a6b53012b06a24eb5a59c5118dfa53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: 5
+  scrollSpeed: 2
   groundTile: {fileID: 11400000, guid: 5187aa53cfe19f345b5f503195885e00, type: 2}
   DirtTile: {fileID: 11400000, guid: db1bc9ac160ad194db7e922b8d9c59cb, type: 2}
+  largeGrassTile: {fileID: 11400000, guid: 67bbe989121b7c441b80624a19e70a3b, type: 2}
+  BushTile: {fileID: 11400000, guid: e081ec08343e91f4693dcac5c3043f38, type: 2}
   obstaclePreFab: {fileID: 2655006606723912318, guid: 76197616eb34efe4f8c7d644d64a7d9c, type: 3}
   BirdPreFab: {fileID: 3533848708560052826, guid: a56fc1cc885bb71499e468db425a70d3, type: 3}
   PickupPreFab: {fileID: 8466428262649131348, guid: 901e601c151cd1842a241258e2082a54, type: 3}
@@ -1473,9 +1475,11 @@ MonoBehaviour:
   birdProbability: 0.048
   pickupProbability: 0.02
   shieldProbability: 0.03
+  backgroundBushSpawnProbability: 0.2
+  backgroundGrassSpawnProbability: 0.03
   initTileColums: 5
-  minObstacleSpacing: 2
-  maxObstacleSpacing: 3
+  minObstacleSpacing: 3
+  maxObstacleSpacing: 4
 --- !u!1 &1092828119
 GameObject:
   m_ObjectHideFlags: 0
@@ -3400,7 +3404,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0.1875, y: 0.21875, z: 0}
   m_MaxChunkCount: 16
@@ -4384,10 +4388,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1225067468495367846, guid: 09102c441568b244787443cecbfadec6, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2313784125378406724, guid: 09102c441568b244787443cecbfadec6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -5.5
@@ -4428,17 +4428,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6302389732870912708, guid: 09102c441568b244787443cecbfadec6, type: 3}
-      propertyPath: m_SortingOrder
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 7415087788150586647, guid: 09102c441568b244787443cecbfadec6, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7771646799015789119, guid: 09102c441568b244787443cecbfadec6, type: 3}
-      propertyPath: m_SortingOrder
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

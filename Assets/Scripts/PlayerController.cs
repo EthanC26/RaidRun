@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GroundCheck), typeof(AudioSource), typeof (ShieldManager))]
 public class PlayerController : MonoBehaviour
 {
-    private float jumpForce = 7f; // Force applied when jumping
+    private float jumpForce = 7.5f; // Force applied when jumping
 
     private Rigidbody2D rb;
     private CapsuleCollider2D bc;
@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private bool isSliding = false;
     private bool isHit = false;
     private bool isInvincible = false;
+
+    private Coroutine slideCoroutine;
 
     private Vector2 originalColliderSize;
     private float originalGravityScale;
@@ -87,10 +89,10 @@ public class PlayerController : MonoBehaviour
         switch (direction)
         {
             case TapSwipeDetection.SwipeDirection.Up:
-                if(isGrounded == true)
+                if(isSliding == true)
+                   CancelSlide();
+                else if(isGrounded == true)
                     Jump();
-                else if(isGrounded == false)
-                    CancelSlide();
                 break;
             case TapSwipeDetection.SwipeDirection.Down:
                 Slide();
@@ -117,33 +119,44 @@ public class PlayerController : MonoBehaviour
     private void Slide()
     {
         if (isSliding) return;
+
         isSliding = true;
-        StartCoroutine(SlideTime());
 
         audioSource.PlayOneShot(slideClip);
 
-        bc.size = new Vector2(bc.size.x, bc.size.y / 2f); // Reduce collider height for sliding
+        bc.size = new Vector2(bc.size.x, originalColliderSize.y / 2f); // Reduce collider height for sliding
         rb.gravityScale = isGrounded ? originalGravityScale : 10f;
-        rb.gravityScale = isGrounded ? originalGravityScale : 10f;
+
+        slideCoroutine = StartCoroutine(SlideTime());
     }
     private void CancelSlide()
     {
-        if (isGrounded && isSliding)
-        {
-            isSliding = false;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Reset vertical velocity
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Apply jump force
-        }
-        else return;
+       if(!isGrounded) return;
+       if(!isSliding) return;
+
+       Debug.Log("Slide Cancelled");
+
+        if(slideCoroutine != null)
+            StopCoroutine(slideCoroutine);
+
+        isSliding = false;
+
+        bc.size = originalColliderSize; // Reset collider size
+        rb.gravityScale = originalGravityScale;
+
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // Reset vertical velocity
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse); // Apply small jump force
     }
 
     IEnumerator SlideTime()
     {
-        yield return new WaitForSeconds(0.5f); // Duration of the slide
-        rb.gravityScale = originalGravityScale;
-        bc.size = originalColliderSize; // Reset collider size
-        isSliding = false;
-       
+        yield return new WaitForSeconds(1f); // Duration of the slide
+        if(isSliding)
+        {
+            isSliding = false;
+            rb.gravityScale = originalGravityScale;
+            bc.size = originalColliderSize; // Reset collider size
+        }
     }
 
     IEnumerator HandleHit()
