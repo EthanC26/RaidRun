@@ -64,4 +64,13 @@ public class TimerManager : MonoBehaviour
     }
 
     public float GetTimeRemaining() => timer;
+
+    public void AddTime(float extraSeconds)
+    {
+        timer += extraSeconds; // Add the extra seconds
+        OnTimeChanged?.Invoke(timer); // Update UI or listeners
+        if (!isRunning && timer > 0f) // Restart the timer if it was stopped at zero
+            StartTimer();
+    }
+
 }

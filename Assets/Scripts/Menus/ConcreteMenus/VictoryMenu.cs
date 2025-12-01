@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 public class VictoryMenu : BaseMenu
 {
+    public UnityAdsManager unityAdsManager;
     public Button QuitBtn;
     public Button MainMenuBtn;
+    public Button AddTimeBtn;
     public TMP_Text TitleText;
     public TMP_Text ScoreText;
 
@@ -18,6 +20,9 @@ public class VictoryMenu : BaseMenu
         if (QuitBtn) QuitBtn.onClick.AddListener(QuitGame);
 
         if (MainMenuBtn) MainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("MainMenu"));
+
+        if (AddTimeBtn) AddTimeBtn.onClick.AddListener(() => unityAdsManager.LoadRewardedAd());
+        
 
         if (TitleText) TitleText.text = "YOU WIN";
 

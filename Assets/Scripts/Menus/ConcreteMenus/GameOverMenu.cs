@@ -2,13 +2,31 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class GameOverMenu : BaseMenu
 {
+    public UnityAdsManager unityAdsManager;
     public Button QuitBtn;
     public Button MainMenuBtn;
+    public Button ReviveBtn;
     public TMP_Text TitleText;
     public TMP_Text ScoreText;
+
+    private void Awake()
+    {
+        //if you didn't assign in the inspector
+        if (unityAdsManager == null)
+        {
+#if UNITY_6000_0_OR_NEWER
+            unityAdsManager = FindFirstObjectByType<UnityAdsManager>();
+#else
+                unityAdsManager = FindObjectOfType<UnityAdsManager>();
+#endif
+        }
+
+        unityAdsManager.Initialize();
+    }
 
     public override void Init(MenuController contex)
     {
@@ -18,6 +36,8 @@ public class GameOverMenu : BaseMenu
         if (QuitBtn) QuitBtn.onClick.AddListener(QuitGame);
 
         if(MainMenuBtn) MainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("MainMenu"));
+
+        if (ReviveBtn) ReviveBtn.onClick.AddListener(() => unityAdsManager.LoadRewardedAd());
 
         if (TitleText) TitleText.text = "GAME OVER";
 
@@ -40,6 +60,11 @@ public class GameOverMenu : BaseMenu
     {
         base.ExitState();
         Time.timeScale = 1f; // Resume the game
+    }
+
+    public void RevivePlayer()
+    {
+        SetNextMenu(MenuStates.InGame);
     }
 
     private void OnDestroy() => Time.timeScale = 1.0f;
